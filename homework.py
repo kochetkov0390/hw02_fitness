@@ -27,6 +27,9 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
+    M_IN_KM: int = 1000
+    MIN_IN_H: int = 60
+    LEN_STEP: float = 0.65
 
     def __init__(self,
                  action: int,
@@ -36,10 +39,6 @@ class Training:
         self.action = action
         self.duration = duration
         self.weight = weight
-
-        LEN_STEP: float = 0.65
-        M_IN_KM: int = 1000
-        MIN_IN_H: int = 60
 
 
     def get_distance(self) -> float:
@@ -95,7 +94,6 @@ class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP: float = 1.38
     coeff_calorie_1: float = 1.1
-    coeff_calorie_2: float = 2
 
     def __init__(self,
                  action: int,
@@ -111,11 +109,12 @@ class Swimming(Training):
         
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return self.length_pool * self.count_pool / self.M_IN_KM / self.duration
+        return ((self.length_pool * self.count_pool)
+                / (self.M_IN_KM) / self.duration)
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        return (self.get_mean_speed + self.coeff_calorie_1) * self.coeff_calorie_2 * self.weight
+        return (self.get_mean_speed() + self.coeff_calorie_1) * 2 * self.weight
 
 
 def read_package(workout_type: str, data: list) -> Training:
@@ -146,4 +145,3 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training = read_package(workout_type, data)
         main(training)
-
